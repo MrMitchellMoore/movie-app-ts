@@ -8,8 +8,8 @@ export function Main() {
 
   const movie = movies[Math.floor(Math.random() * movies.length)];
 
-  const getMovie = async () => {
-    const result: Movie[] = await fetch(requests.requestPopular, {
+  const getMovie = async (resName: string) => {
+    const result: Movie[] = await fetch(resName, {
       next: { revalidate: 15 },
     })
       .then((res) => res.json())
@@ -20,7 +20,7 @@ export function Main() {
   };
 
   useEffect(() => {
-    getMovie();
+    getMovie(requests.requestPopular);
   }, []);
 
   const truncateString = (str: string | undefined, num: number) => {
@@ -31,9 +31,9 @@ export function Main() {
   return (
     <div className="w-full h-[550px] text-white">
       <div className="w-full h-full">
-        <div className="absolute w-full h-[600px] bg-gradient-to-r from-black"></div>
+        <div className="absolute w-full h-[550px] bg-gradient-to-r from-black"></div>
         <Image
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover md:object-center aspect-auto"
           src={`https://image.tmdb.org/t/p/original/${movie?.backdrop_path}`}
           alt={movie?.title}
           width={768}
