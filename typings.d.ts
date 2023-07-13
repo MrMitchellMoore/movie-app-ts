@@ -1,3 +1,5 @@
+import { User } from "firebase/auth";
+
 declare module "tailwind-scrollbar-hide";
 type Movie = {
   id: number;
