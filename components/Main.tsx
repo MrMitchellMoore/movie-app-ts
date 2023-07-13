@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { requests } from "@/lib/Requests";
 import Image from "next/image";
+import { Movie } from "@/typings";
 
 export function Main() {
   const [movies, setMovies] = useState<Movie[]>([]);

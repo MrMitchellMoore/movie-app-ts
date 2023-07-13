@@ -2,7 +2,6 @@
 import { auth } from "@/lib/firebaseConfig";
 
 import {
-  User,
   UserCredential,
   createUserWithEmailAndPassword,
   onAuthStateChanged,
@@ -10,52 +9,68 @@ import {
   signOut,
 } from "firebase/auth";
 import {
+  Dispatch,
   ReactNode,
+  SetStateAction,
   createContext,
   useContext,
   useEffect,
   useState,
 } from "react";
 
-interface AuthUserContextType {
-  email?: string;
-  password?: string;
-  user?: User;
-  logOut: () => void;
-  logIn: ({ email, password }: AuthUserContextType) => Promise<UserCredential>;
-  signUp: ({ email, password }: AuthUserContextType) => Promise<UserCredential>;
+interface IUser {
+  email: string;
+  password: string;
 }
 
-export const AuthContext = createContext<AuthUserContextType | null>(null);
+interface AuthUserContextType {
+  user: IUser;
+  setUser: Dispatch<SetStateAction<IUser>>;
+  signUp: ({ email, password }: IUser) => Promise<UserCredential>;
+  logIn: ({ email, password }: IUser) => Promise<UserCredential>;
+  logOut: () => {};
+}
+
+const defaultState = {
+  user: {
+    email: "",
+    password: "",
+  },
+  setUser: (_user: IUser) => {},
+} as unknown as AuthUserContextType;
+
+export const AuthContext =
+  createContext<Partial<AuthUserContextType>>(defaultState);
 
 export function AuthContextProvider({
   children,
 }: {
   children: ReactNode;
 }): ReactNode {
-  const [user, setUser] = useState<User | undefined>();
+  const [user, setUser] = useState<IUser>({
+    email: "",
+    password: "",
+  });
 
-  const signUp = ({ email, password }: AuthUserContextType) => {
-    return createUserWithEmailAndPassword(auth, email!, password!);
+  const signUp = ({ email, password }: IUser) => {
+    return createUserWithEmailAndPassword(auth, email, password);
   };
 
-  const logIn = ({ email, password }: AuthUserContextType) => {
-    return signInWithEmailAndPassword(auth, email!, password!);
+  const logIn = ({ email, password }: IUser) => {
+    return signInWithEmailAndPassword(auth, email, password);
   };
 
-  const logOut = () => {
-    return signOut(auth);
-  };
+  const logOut = () => signOut(auth);
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-      return setUser(currentUser!);
+      return setUser(currentUser as unknown as typeof user);
     });
     return () => unsubscribe();
   });
 
   return (
-    <AuthContext.Provider value={{ logOut, logIn, signUp, user }}>
+    <AuthContext.Provider value={{ user, signUp, logOut, logIn }}>
       {children}
     </AuthContext.Provider>
   );
