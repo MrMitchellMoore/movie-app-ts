@@ -1,13 +1,16 @@
 "use client";
-import Image from "next/image";
+
 import { useEffect, useState } from "react";
+import { Movie } from "./Movie";
+import { MdChevronLeft, MdChevronRight } from "react-icons/md";
 
 type RowProps = {
   title: string;
   fetchURL: string;
+  rowID: string;
 };
 
-export function Row({ title, fetchURL }: RowProps) {
+export function Row({ title, fetchURL, rowID }: RowProps) {
   const [movies, setMovies] = useState<Movie[]>([]);
 
   useEffect(() => {
@@ -17,34 +20,37 @@ export function Row({ title, fetchURL }: RowProps) {
       .catch((error: Error) => console.log(error.message));
   }, [fetchURL]);
 
+  const slideLeft = () => {
+    var slider = document.getElementById("slider" + rowID)!;
+    slider.scrollLeft = slider?.scrollLeft - 500;
+  };
+  const slideRight = () => {
+    var slider = document.getElementById("slider" + rowID)!;
+    slider.scrollLeft = slider?.scrollLeft + 500;
+  };
+
   return (
     <>
       <h2 className="text-white font-bold md:text-xl p-4">{title}</h2>
-      <div className="relative flex items-center">
-        <div id={"slider"}>
+      <div className="relative flex items-center group">
+        <MdChevronLeft
+          size={40}
+          onClick={slideLeft}
+          className="bg-white rounded-full absolute opacity-50 hover:opacity-100 cursor-pointer z-50 hidden group-hover:block left-0"
+        />
+        <div
+          id={"slider" + rowID}
+          className="w-full h-full overflow-x-scroll whitespace-nowrap scroll-smooth scrollbar-hide relative"
+        >
           {movies.map((item) => (
-            <div
-              key={item.id}
-              className="w-[160px] sm:w-[200px] md:w-[240px] lg:w-[280px] inline-block cursor-pointer relative p-2 text-white"
-            >
-              <Image
-                className="w-full h-[133px] block object-fit aspect-auto"
-                alt={item.title}
-                src={`https://image.tmdb.org/t/p/w500/${
-                  !item?.backdrop_path ? item.poster_path : item?.backdrop_path
-                }`}
-                width={250}
-                height={133}
-              />
-
-              <div className="absolute top-0 left-0 w-full h-full hover:bg-black/80 opacity-0 hover:opacity-100 text-white">
-                <p className="white-space-normal text-xs md:text-sm font-bold flex justify-center items-center h-full text-center">
-                  {item?.title}
-                </p>
-              </div>
-            </div>
+            <Movie key={item.id} item={item} />
           ))}
         </div>
+        <MdChevronRight
+          size={40}
+          onClick={slideRight}
+          className="bg-white rounded-full absolute opacity-50 hover:opacity-100 cursor-pointer z-50 hidden group-hover:block right-0"
+        />
       </div>
     </>
   );
