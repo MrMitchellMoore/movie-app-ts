@@ -4,7 +4,7 @@ import { Row } from "@/components/Row";
 import { requests } from "@/lib/Requests";
 
 // Code Commerce Netflix
-// TODO setup SignIn and SignOut pages
+// TODO Deploy Project
 
 export default function Home() {
   return (

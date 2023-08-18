@@ -1,5 +1,5 @@
 "use client";
-import { auth } from "@/lib/firebaseConfig";
+import { auth, db } from "@/lib/firebaseConfig";
 
 import {
   UserCredential,
@@ -8,6 +8,7 @@ import {
   signInWithEmailAndPassword,
   signOut,
 } from "firebase/auth";
+import { setDoc, doc } from "firebase/firestore";
 import {
   Dispatch,
   ReactNode,
@@ -53,6 +54,9 @@ export function AuthContextProvider({
   });
 
   const signUp = ({ email, password }: IUser) => {
+    setDoc(doc(db, "users", email), {
+      savedShows: [],
+    });
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
@@ -77,6 +81,5 @@ export function AuthContextProvider({
 }
 
 export function UserAuth() {
-  console.log(AuthContext);
   return useContext(AuthContext);
 }

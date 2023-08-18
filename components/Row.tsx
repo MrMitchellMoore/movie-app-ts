@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Movie } from "./Movie";
+import { Movie as MovieType } from "@/typings";
 import { MdChevronLeft, MdChevronRight } from "react-icons/md";
+import { Movie } from "./Movie";
 
 type RowProps = {
   title: string;
@@ -11,7 +12,7 @@ type RowProps = {
 };
 
 export function Row({ title, fetchURL, rowID }: RowProps) {
-  const [movies, setMovies] = useState<Movie[]>([]);
+  const [movies, setMovies] = useState<MovieType[]>([]);
 
   useEffect(() => {
     fetch(fetchURL, { next: { revalidate: 15 } })

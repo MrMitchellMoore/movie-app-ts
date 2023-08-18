@@ -10,11 +10,12 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { user, signUp } = UserAuth();
-
+  const [error, setError] = useState<string>("");
   const router = useRouter();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError("");
     try {
       if (!signUp) {
         return;
@@ -24,6 +25,7 @@ const SignUp = () => {
       }
     } catch (error) {
       console.log(error);
+      setError(`${error}`);
     }
   };
 
@@ -44,6 +46,9 @@ const SignUp = () => {
           <div className="max-w-[450px] h-[600px] mx-auto bg-black/75 text-white">
             <div className="max-w-[320px] mx-auto py-16">
               <h1 className="text-3xl font-bold">Sign Up</h1>
+              {error ? (
+                <p className="p-3 mt-4 bg-red-400 my-2">{error}</p>
+              ) : null}
               <form
                 onSubmit={handleSubmit}
                 className="w-full flex flex-col py-4"
