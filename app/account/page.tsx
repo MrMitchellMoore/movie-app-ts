@@ -11,15 +11,12 @@ export default function Account() {
   const router = useRouter();
 
   useEffect(() => {
-    const getUser = () => {
-      onAuthStateChanged(auth, (current_user) => {
-        if (!auth.currentUser) {
-          router.push("/");
-        }
-        return current_user;
-      });
-    };
-    getUser();
+    onAuthStateChanged(auth, (currentUser) => {
+      if (!auth.currentUser) {
+        router.push("/");
+      }
+      return currentUser;
+    });
   });
 
   return (

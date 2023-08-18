@@ -21,21 +21,20 @@ export function SavedShow() {
   };
 
   useEffect(() => {
-    try {
-      if (!onSnapshot) return;
-
-      onSnapshot(doc(db, "users", `${user?.email}`), (doc) => {
-        setMovies(doc.data()?.savedShows);
-      });
-    } catch (error) {
-      console.log(error);
-    }
+    if (!user?.email) return;
+    onSnapshot(doc(db, "users", `${user?.email!}`), (doc) => {
+      setMovies(doc.data()?.savedShows);
+    });
+    console.log("something wrong");
   }, [user?.email]);
 
-  const movieRef = doc(db, "users", `${user?.email}`);
+  const movieRef = doc(db, "users", `${user?.email! || null}`);
   const deleteShow = async (passedID: number) => {
     try {
       const result = movies.filter((item) => item.id !== passedID);
+
+      if (!result) return;
+
       await updateDoc(movieRef, {
         savedShows: result,
       });
