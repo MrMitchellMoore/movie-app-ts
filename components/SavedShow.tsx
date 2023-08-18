@@ -21,9 +21,15 @@ export function SavedShow() {
   };
 
   useEffect(() => {
-    onSnapshot(doc(db, "users", `${user?.email}`), (doc) => {
-      setMovies(doc.data()?.savedShows);
-    });
+    try {
+      if (!onSnapshot) return;
+
+      onSnapshot(doc(db, "users", `${user?.email}`), (doc) => {
+        setMovies(doc.data()?.savedShows);
+      });
+    } catch (error) {
+      console.log(error);
+    }
   }, [user?.email]);
 
   const movieRef = doc(db, "users", `${user?.email}`);
