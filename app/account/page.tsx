@@ -11,7 +11,7 @@ export default function Account() {
   const router = useRouter();
 
   useEffect(() => {
-    onAuthStateChanged(auth, (_currentUser) => {
+    onAuthStateChanged(auth, () => {
       if (!auth.currentUser) {
         router.push("/");
       }
