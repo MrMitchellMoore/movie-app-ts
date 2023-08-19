@@ -22,13 +22,13 @@ export function SavedShow() {
 
   useEffect(() => {
     if (!user?.email) return;
-    onSnapshot(doc(db, "users", `${user?.email!}`), (doc) => {
+    onSnapshot(doc(db, "users", `${user?.email! || user?.password}`), (doc) => {
       setMovies(doc.data()?.savedShows);
     });
     console.log("something wrong");
-  }, [user?.email]);
+  }, [user?.email, user?.password]);
 
-  const movieRef = doc(db, "users", `${user?.email! || null}`);
+  const movieRef = doc(db, "users", `${user?.email! || user?.password}`);
   const deleteShow = async (passedID: number) => {
     try {
       const result = movies.filter((item) => item.id !== passedID);
