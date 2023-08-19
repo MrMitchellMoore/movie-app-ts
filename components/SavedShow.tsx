@@ -22,11 +22,11 @@ export function SavedShow() {
 
   useEffect(() => {
     if (!user?.email) return;
-    onSnapshot(doc(db, "users", `${user?.email! || user?.password}`), (doc) => {
+    onSnapshot(doc(db, "users", `${user?.email!}`), (doc) => {
       setMovies(doc.data()?.savedShows);
     });
     console.log("something wrong");
-  }, [user?.email, user?.password]);
+  }, [user?.email]);
 
   const movieRef = doc(db, "users", `${user?.email! || user?.password}`);
   const deleteShow = async (passedID: number) => {
