@@ -28,7 +28,7 @@ export function SavedShow() {
     console.log("something wrong");
   }, [user?.email]);
 
-  const movieRef = doc(db, "users", `${user?.email! || user?.password}`);
+  const movieRef = doc(db, "users", `${user?.email! || null}`);
   const deleteShow = async (passedID: number) => {
     try {
       const result = movies.filter((item) => item.id !== passedID);
